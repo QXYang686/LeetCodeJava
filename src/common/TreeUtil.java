@@ -1,5 +1,8 @@
 package common;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class TreeUtil {
     public static TreeNode buildTree(Integer[] values) {
         if (values.length == 0) return null;
@@ -14,5 +17,30 @@ public class TreeUtil {
             }
         }
         return nodes[0];
+    }
+
+    public static Integer[] buildArray(TreeNode root) {
+        if (root == null) return new Integer[0];
+        Queue<TreeNode> validQueue = new LinkedList<>();
+        Queue<TreeNode> structQueue = new LinkedList<>();
+        Queue<Integer> result = new LinkedList<>();
+        validQueue.offer(root);
+        structQueue.offer(root);
+        while (!validQueue.isEmpty()) {
+            TreeNode validNode = validQueue.poll();
+            // 结构性节点输出null
+            while (structQueue.poll() != validNode) {
+                result.offer(null);
+                structQueue.offer(null);
+                structQueue.offer(null);
+            }
+            // 处理并入队
+            result.offer(validNode.val);
+            if (validNode.left != null) validQueue.offer(validNode.left);
+            if (validNode.right != null) validQueue.offer(validNode.right);
+            structQueue.offer(validNode.left);
+            structQueue.offer(validNode.right);
+        }
+        return result.toArray(new Integer[0]);
     }
 }
