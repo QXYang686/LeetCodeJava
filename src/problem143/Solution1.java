@@ -39,6 +39,6 @@ public class Solution1 {
                 1, 2, 3, 4, 5
         });
         new Solution1().reorderList(head2);
-        System.out.println(ListNodeUtil.buildArray(head2)); // 1 5 2 4 2
+        System.out.println(ListNodeUtil.buildArray(head2)); // 1 5 2 4 3
     }
 }
