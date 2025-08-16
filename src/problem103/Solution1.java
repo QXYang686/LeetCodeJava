@@ -3,38 +3,36 @@ package problem103;
 import common.TreeNode;
 import common.TreeUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Solution1 {
+    // 双栈做法 -> 将双栈背对背贴合即为双端队列做法
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        Queue<TreeNode> nodes = new LinkedList<>();
-        LinkedList<List<Integer>> ans = new LinkedList<>();
-        if (root == null) return ans;
-        nodes.offer(root);
-        boolean directionFlag = true;
-        while (!nodes.isEmpty()) {
-            int levelCount = nodes.size();
-            LinkedList<Integer> levelAns = new LinkedList<>();
-            for (int i = 0; i < levelCount; i++) {
-                TreeNode node = nodes.poll();
-                // 写入答案
-                if (directionFlag) {
-                    levelAns.addLast(node.val);
+        ArrayList<List<Integer>> ans = new ArrayList<>();
+        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+        if (root != null) stack.push(root);
+        boolean leftFirst = true;
+        while (!stack.isEmpty()) {
+            ans.add(new ArrayList<>());
+            ArrayDeque<TreeNode> levelStack = new ArrayDeque<>();
+            while (!stack.isEmpty()) {
+                TreeNode node = stack.pop();
+                ans.getLast().add(node.val);
+                if (leftFirst) {
+                    if (node.left != null) levelStack.push(node.left);
+                    if (node.right != null) levelStack.push(node.right);
                 } else {
-                    levelAns.addFirst(node.val);
+                    if (node.right != null) levelStack.push(node.right);
+                    if (node.left != null) levelStack.push(node.left);
                 }
-                if (node.left != null) nodes.offer(node.left);
-                if (node.right != null) nodes.offer(node.right);
             }
-            ans.addLast(levelAns);
-            directionFlag = !directionFlag;
+            stack = levelStack;
+            leftFirst = !leftFirst;
         }
         return ans;
     }
 
     public static void main(String[] args) {
-        System.out.println(new Solution1().zigzagLevelOrder(TreeUtil.buildTree(new Integer[]{3,9,20,null,null,15,7})));
+        System.out.println(new Solution1().zigzagLevelOrder(TreeUtil.buildTree(new Integer[]{3, 9, 20, null, null, 15, 7})));
     }
 }
